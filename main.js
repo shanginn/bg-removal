@@ -1,5 +1,4 @@
 import './style.css';
-
 import { AutoModel, AutoProcessor, env, RawImage } from '@xenova/transformers';
 
 // Adjusting environment settings for model loading
@@ -11,11 +10,42 @@ const status = document.getElementById('status');
 const fileUpload = document.getElementById('upload');
 const imageContainer = document.getElementById('container');
 const downloadBtn = document.getElementById('download-btn');
+const modelLoadingOverlay = document.getElementById('model-loading-overlay');
+const dropArea = document.getElementById('drop-area');
+let model, processor; // Declare these outside of any function
 
-// Initial UI setup
-status.textContent = 'Модель загружается...';
+// Show loading overlay
+modelLoadingOverlay.style.display = 'flex';
 
-// Asynchronously load the model and processor
+// Prevent default drag behaviors
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+// Highlight drop area when item is dragged over it
+['dragenter', 'dragover'].forEach(eventName => {
+    dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+});
+
+// Unhighlight drop area when item is dragged out of it or dropped
+['dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+});
+
+// Handle dropped files
+dropArea.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+    let dt = e.dataTransfer;
+    fileUpload.files = dt.files;
+    handleFiles(fileUpload.files, model, processor);
+}
+
 async function loadModelAndProcessor() {
     const model = await AutoModel.from_pretrained('briaai/RMBG-1.4', {
         config: { model_type: 'custom' },
@@ -36,27 +66,38 @@ async function loadModelAndProcessor() {
         }
     });
 
+    modelLoadingOverlay.style.display = 'none'; // Hide loading overlay once model is ready
     status.textContent = 'Готово к работе';
     return { model, processor };
 }
 
-const { model, processor } = await loadModelAndProcessor();
+async function setup() {
+    const loadedModels = await loadModelAndProcessor();
+    model = loadedModels.model;
+    processor = loadedModels.processor;
 
-fileUpload.addEventListener('change', async function (e) {
-    const file = e.target.files[0];
+    // Pass model and processor to the event listener callback
+    fileUpload.addEventListener('change', async (e) => {
+        await handleFiles(e.target.files, model, processor); // Pass model and processor here
+    });
+}
+
+async function handleFiles(files, model, processor) {
+    const file = files[0];
     if (!file) {
         return;
     }
 
     status.textContent = 'Загрузка изображения...';
     const reader = new FileReader();
-    reader.onload = async e2 => {
-        await predict(e2.target.result);
+    reader.onload = async (e) => {
+        // Pass model and processor to the predict function
+        await predict(e.target.result, model, processor);
     };
     reader.readAsDataURL(file);
-});
+}
 
-async function predict(url) {
+async function predict(url, model, processor) {
     status.textContent = 'Анализ изображения...';
     const image = await RawImage.fromURL(url);
     imageContainer.innerHTML = '';
@@ -67,7 +108,11 @@ async function predict(url) {
     imageContainer.style.width = `${cw}px`;
     imageContainer.style.height = `${ch}px`;
 
-    const { pixel_values } = await processor(image);
+    // Assuming the processor object has a method named 'process' or similar for processing the image
+    // This line needs to be adjusted according to the actual API
+    const processedImage = await processor(image); // Correct method to preprocess the image
+    const { pixel_values } = processedImage; // Adjust according to the actual structure of the processed image object
+
     const { output } = await model({ input: pixel_values });
 
     const mask = await RawImage.fromTensor(output[0].mul(255).to('uint8')).resize(image.width, image.height);
@@ -86,10 +131,12 @@ async function predict(url) {
     imageContainer.append(canvas);
     imageContainer.style.removeProperty('background-image');
     status.textContent = 'Обработка завершена!';
+    enableDownload(canvas);
+}
 
-    // Make the download button visible and functional
+function enableDownload(canvas) {
     downloadBtn.style.display = 'inline';
-    downloadBtn.onclick = function () {
+    downloadBtn.onclick = () => {
         const dataURL = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.download = 'processed-image.png';
@@ -97,3 +144,5 @@ async function predict(url) {
         link.click();
     };
 }
+
+await setup();

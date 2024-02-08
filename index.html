@@ -9,15 +9,20 @@
 </head>
 
 <body>
+<div id="model-loading-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:100; display:flex; justify-content:center; align-items:center;">
+  <div style="color:white;">Модель загружается...</div>
+</div>
 <h1>Удаление Фона Бесплатно</h1>
-<div id="container">
-  <label id="upload-button" for="upload">
-    <i class="fas fa-upload"></i>
-    Нажмите, чтобы загрузить изображение
-  </label>
+<div id="drop-area">
+  <div id="container">
+    <label id="upload-button" for="upload">
+      <i class="fas fa-upload"></i>
+      Нажмите или перетащите изображение сюда
+    </label>
+  </div>
+  <input id="upload" type="file" accept="image/*" />
 </div>
 <label id="status"></label>
-<input id="upload" type="file" accept="image/*" />
 <button id="download-btn" style="display:none;">Скачать</button>
 
 <script type="module" src="/main.js"></script>
