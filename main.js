@@ -13,6 +13,7 @@ const downloadBtn = document.getElementById('download-btn');
 const processAnotherBtn = document.getElementById('process-another-btn');
 const modelLoadingOverlay = document.getElementById('model-loading-overlay');
 const dropArea = document.getElementById('drop-area');
+const uploadButton = document.getElementById('upload-button');
 let model, processor; // Declare these outside of any function
 
 // Show loading overlay
@@ -42,10 +43,10 @@ function preventDefaults(e) {
 // Handle dropped files
 dropArea.addEventListener('drop', handleDrop, false);
 
-function handleDrop(e) {
+async function handleDrop(e) {
     let dt = e.dataTransfer;
     fileUpload.files = dt.files;
-    handleFiles(fileUpload.files, model, processor);
+    await handleFiles(fileUpload.files, model, processor);
 }
 
 async function loadModelAndProcessor() {
@@ -85,11 +86,16 @@ async function setup() {
 
     // Add event listener for processAnotherBtn
     processAnotherBtn.addEventListener('click', () => {
-        fileUpload.value = ''; // Reset file input
-        imageContainer.innerHTML = ''; // Clear previous image
-        downloadBtn.classList.add('hidden'); // Hide download button
-        processAnotherBtn.classList.add('hidden'); // Hide "process another" button
-        status.textContent = ''; // Clear status message
+        //
+        // fileUpload.value = ''; // Reset file input
+        // imageContainer.innerHTML = ''; // Clear previous image
+        // downloadBtn.classList.add('hidden'); // Hide download button
+        // processAnotherBtn.classList.add('hidden'); // Hide "process another" button
+        // uploadButton.classList.remove('hidden'); // Show upload button
+        // status.textContent = ''; // Clear status message
+
+        // reload page:
+        location.reload();
     });
 }
 
@@ -111,7 +117,8 @@ async function handleFiles(files, model, processor) {
 async function predict(url, model, processor) {
     status.textContent = 'Анализ изображения...';
     const image = await RawImage.fromURL(url);
-    imageContainer.innerHTML = '';
+    uploadButton.classList.add('hidden'); // Hide upload button
+
     imageContainer.style.backgroundImage = `url(${url})`;
 
     const ar = image.width / image.height;
@@ -153,7 +160,6 @@ function enableDownload(canvas) {
     downloadBtn.innerHTML = '<i class="fas fa-download"></i> Скачать'; // Font Awesome icon
     processAnotherBtn.classList.remove('hidden'); // Show "process another" button
 
-    downloadBtn.style.display = 'inline';
     downloadBtn.onclick = () => {
         const dataURL = canvas.toDataURL('image/png');
         const link = document.createElement('a');
