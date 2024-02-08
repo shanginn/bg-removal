@@ -10,6 +10,7 @@ const status = document.getElementById('status');
 const fileUpload = document.getElementById('upload');
 const imageContainer = document.getElementById('container');
 const downloadBtn = document.getElementById('download-btn');
+const processAnotherBtn = document.getElementById('process-another-btn');
 const modelLoadingOverlay = document.getElementById('model-loading-overlay');
 const dropArea = document.getElementById('drop-area');
 let model, processor; // Declare these outside of any function
@@ -20,6 +21,7 @@ modelLoadingOverlay.style.display = 'flex';
 // Prevent default drag behaviors
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
     dropArea.addEventListener(eventName, preventDefaults, false);
+    document.body.classList.add('bg-gray-200'); // Tailwind class for background color
 });
 
 function preventDefaults(e) {
@@ -29,12 +31,12 @@ function preventDefaults(e) {
 
 // Highlight drop area when item is dragged over it
 ['dragenter', 'dragover'].forEach(eventName => {
-    dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+    dropArea.addEventListener(eventName, () => dropArea.classList.add('border-blue-500'), false); // Tailwind classes for border color
 });
 
 // Unhighlight drop area when item is dragged out of it or dropped
 ['dragleave', 'drop'].forEach(eventName => {
-    dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+    dropArea.addEventListener(eventName, () => dropArea.classList.remove('border-blue-500'), false); // Tailwind classes for border color
 });
 
 // Handle dropped files
@@ -80,6 +82,15 @@ async function setup() {
     fileUpload.addEventListener('change', async (e) => {
         await handleFiles(e.target.files, model, processor); // Pass model and processor here
     });
+
+    // Add event listener for processAnotherBtn
+    processAnotherBtn.addEventListener('click', () => {
+        fileUpload.value = ''; // Reset file input
+        imageContainer.innerHTML = ''; // Clear previous image
+        downloadBtn.classList.add('hidden'); // Hide download button
+        processAnotherBtn.classList.add('hidden'); // Hide "process another" button
+        status.textContent = ''; // Clear status message
+    });
 }
 
 async function handleFiles(files, model, processor) {
@@ -105,6 +116,8 @@ async function predict(url, model, processor) {
 
     const ar = image.width / image.height;
     const [cw, ch] = (ar > 720 / 480) ? [720, 720 / ar] : [480 * ar, 480];
+    imageContainer.style.maxWidth = `${cw}px`;
+    imageContainer.style.maxHeight = `${ch}px`;
     imageContainer.style.width = `${cw}px`;
     imageContainer.style.height = `${ch}px`;
 
@@ -135,6 +148,11 @@ async function predict(url, model, processor) {
 }
 
 function enableDownload(canvas) {
+    downloadBtn.classList.remove('hidden');
+    downloadBtn.classList.add('btn', 'btn-primary'); // Tailwind classes for button styling
+    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Скачать'; // Font Awesome icon
+    processAnotherBtn.classList.remove('hidden'); // Show "process another" button
+
     downloadBtn.style.display = 'inline';
     downloadBtn.onclick = () => {
         const dataURL = canvas.toDataURL('image/png');
