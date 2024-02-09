@@ -164,20 +164,32 @@ async function predict(url, model, processor) {
     toggleOverlay(false);
     enableDownload(canvas);
 }
-
 function enableDownload(canvas) {
     downloadBtn.classList.remove('hidden');
     downloadBtn.classList.add('btn', 'btn-primary'); // Tailwind classes for button styling
     downloadBtn.innerHTML = '<i class="fas fa-download"></i> Скачать'; // Font Awesome icon
     processAnotherBtn.classList.remove('hidden'); // Show "process another" button
 
-    downloadBtn.onclick = () => {
+    downloadBtn.onclick = async () => {
+        setDownloadButtonState(true); // Set the button to loading state
+
         const dataURL = canvas.toDataURL('image/png');
+        const blob = dataURLToBlob(dataURL); // Convert data URL to blob
+        const objectURL = URL.createObjectURL(blob);
+
         const link = document.createElement('a');
-        const now = new Date().toISOString().replace(':', '-');
+        const now = new Date().toISOString().replace(/[:.]/g, '-');
         link.download = `no-bg-${now}.png`;
-        link.href = dataURL;
-        link.click();
+        link.href = objectURL;
+        document.body.appendChild(link); // Append to body to ensure visibility in the DOM on mobile
+
+        link.click(); // Trigger the download
+
+        // Cleanup
+        document.body.removeChild(link);
+        URL.revokeObjectURL(objectURL);
+
+        setDownloadButtonState(false); // Reset the button to normal state after operation
     };
 }
 
@@ -189,6 +201,30 @@ function toggleOverlay(display = true, message = 'Анализ изображе�
     } else {
         modelLoadingOverlay.style.display = 'none';
     }
+}
+
+function setDownloadButtonState(isLoading) {
+    if (isLoading) {
+        downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Подготовка...'; // Show loading spinner and text
+        downloadBtn.disabled = true; // Disable the button to prevent multiple clicks
+    } else {
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> Скачать'; // Reset to original text
+        downloadBtn.disabled = false; // Enable the button
+    }
+}
+
+function dataURLToBlob(dataURL) {
+    const parts = dataURL.split(';base64,');
+    const contentType = parts[0].split(':')[1];
+    const raw = window.atob(parts[1]);
+    const rawLength = raw.length;
+    const uInt8Array = new Uint8Array(rawLength);
+
+    for (let i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw.charCodeAt(i);
+    }
+
+    return new Blob([uInt8Array], { type: contentType });
 }
 
 await setup();
