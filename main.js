@@ -17,7 +17,8 @@ const uploadButton = document.getElementById('upload-button');
 let model, processor; // Declare these outside of any function
 
 // Show loading overlay
-modelLoadingOverlay.style.display = 'flex';
+// modelLoadingOverlay.style.display = 'flex';
+toggleOverlay(true, 'Загрузка инструментов, пожалуйста подождите...');
 
 // Prevent default drag behaviors
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -69,7 +70,8 @@ async function loadModelAndProcessor() {
         }
     });
 
-    modelLoadingOverlay.style.display = 'none'; // Hide loading overlay once model is ready
+    // modelLoadingOverlay.style.display = 'none'; // Hide loading overlay once model is ready
+    toggleOverlay(false);
     status.textContent = 'Готово к работе';
     return { model, processor };
 }
@@ -86,16 +88,23 @@ async function setup() {
 
     // Add event listener for processAnotherBtn
     processAnotherBtn.addEventListener('click', () => {
-        //
-        // fileUpload.value = ''; // Reset file input
-        // imageContainer.innerHTML = ''; // Clear previous image
-        // downloadBtn.classList.add('hidden'); // Hide download button
-        // processAnotherBtn.classList.add('hidden'); // Hide "process another" button
-        // uploadButton.classList.remove('hidden'); // Show upload button
-        // status.textContent = ''; // Clear status message
+        fileUpload.value = ''; // Reset file input
+        downloadBtn.classList.add('hidden'); // Hide download button
+        processAnotherBtn.classList.add('hidden'); // Hide "process another" button
+        uploadButton.classList.remove('hidden'); // Show upload button
+        status.textContent = ''; // Clear status message
 
-        // reload page:
-        location.reload();
+        // Clear previous image
+        imageContainer.style.removeProperty('max-width');
+        imageContainer.style.removeProperty('max-height');
+        imageContainer.style.removeProperty('width');
+        imageContainer.style.removeProperty('height');
+        imageContainer.style.removeProperty('background');
+
+        const canvas = imageContainer.querySelector('canvas');
+        if (canvas) {
+            canvas.remove();
+        }
     });
 }
 
@@ -115,7 +124,7 @@ async function handleFiles(files, model, processor) {
 }
 
 async function predict(url, model, processor) {
-    status.textContent = 'Анализ изображения...';
+    toggleOverlay(true, 'Удаляем фон...');
     const image = await RawImage.fromURL(url);
     uploadButton.classList.add('hidden'); // Hide upload button
 
@@ -150,7 +159,9 @@ async function predict(url, model, processor) {
 
     imageContainer.append(canvas);
     imageContainer.style.removeProperty('background-image');
+    imageContainer.style.background = `url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==")`;
     status.textContent = 'Обработка завершена!';
+    toggleOverlay(false);
     enableDownload(canvas);
 }
 
@@ -163,10 +174,21 @@ function enableDownload(canvas) {
     downloadBtn.onclick = () => {
         const dataURL = canvas.toDataURL('image/png');
         const link = document.createElement('a');
-        link.download = 'processed-image.png';
+        const now = new Date().toISOString().replace(':', '-');
+        link.download = `no-bg-${now}.png`;
         link.href = dataURL;
         link.click();
     };
+}
+
+// Function to toggle overlay visibility
+function toggleOverlay(display = true, message = 'Анализ изображения...') {
+    if (display) {
+        modelLoadingOverlay.innerHTML = `<div class="text-white flex flex-col items-center"><i class="fas fa-spinner fa-spin fa-3x"></i><p>${message}</p></div>`; // Update message dynamically
+        modelLoadingOverlay.style.display = 'flex';
+    } else {
+        modelLoadingOverlay.style.display = 'none';
+    }
 }
 
 await setup();
