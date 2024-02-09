@@ -34,60 +34,60 @@
   </script>
 </head>
 
-<body class="bg-gray-50 h-full">
-<div id="model-loading-overlay" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
-  <div class="text-white">Загрузка инструментов, пожалуйста подождите...</div>
-</div>
-<div class="text-center mt-10">
-  <h1 class="text-4xl font-bold">Удалить фон бесплатно и без регистрации</h1>
-  <div id="drop-area" class="mt-6">
-    <div id="container" class="relative mx-auto border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-white mt-6 w-full max-w-xl sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl 2xl:max-w-3xl h-auto bg-cover bg-center bg-no-repeat">
-      <label id="upload-button" for="upload" class="flex flex-col justify-center items-center gap-2 cursor-pointer h-full w-full p-24">
-        <i class="fas fa-upload fa-3x"></i>
-        <span class="text-lg">Нажмите или перетащите изображение сюда</span>
-      </label>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+  <div class="flex-grow">
+    <div id="model-loading-overlay" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
+      <div class="text-white">Загрузка инструментов, пожалуйста подождите...</div>
     </div>
-    <input id="upload" type="file" accept="image/*" class="hidden" />
+    <div class="text-center mt-10">
+      <h1 class="text-4xl font-bold">Удалить фон бесплатно и без регистрации</h1>
+      <div id="drop-area" class="mt-6">
+        <div id="container" class="relative mx-auto border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-white mt-6 w-full max-w-xl sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl 2xl:max-w-3xl h-auto bg-cover bg-center bg-no-repeat">
+          <label id="upload-button" for="upload" class="flex flex-col justify-center items-center gap-2 cursor-pointer h-full w-full p-24">
+            <i class="fas fa-upload fa-3x"></i>
+            <span class="text-lg">Нажмите или перетащите изображение сюда</span>
+          </label>
+        </div>
+        <input id="upload" type="file" accept="image/*" class="hidden" />
+      </div>
+      <label id="status" class="block mt-2"></label>
+      <button id="download-btn" class="mt-4 hidden text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded shadow-lg"><i class="fas fa-download"></i> Скачать</button>
+      <button id="process-another-btn" class="mt-4 hidden text-white bg-green-500 hover:bg-green-700 font-bold py-2 px-4 rounded shadow-lg"><i class="fas fa-sync-alt"></i> Обработать другое изображение</button>
+    </div>
   </div>
-  <label id="status" class="block mt-2"></label>
-  <button id="download-btn" class="mt-4 hidden text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded shadow-lg"><i class="fas fa-download"></i> Скачать</button>
-  <button id="process-another-btn" class="mt-4 hidden text-white bg-green-500 hover:bg-green-700 font-bold py-2 px-4 rounded shadow-lg"><i class="fas fa-sync-alt"></i> Обработать другое изображение</button>
-</div>
+  <footer class="inset-x-0 bg-gray-800 text-white p-4 mt-10">
+    <div class="max-w-screen-xl mx-auto flex justify-around items-center">
+      <a target="_blank" href="https://t.me/genera4_bot?start=bg" class="text-center">
+        <img src="https://cdn4.cdn-telegram.org/file/ZHLgmPtw52OR4hIDRVknlUXmR2G3qSnCuaTk7l_c20ZFA6qkuU05UnkfJ5P4OJAyZcvuYZzNM5NEwIXUyw7sZDzyzWbgoFMMawUWFiR9xKWW55giAxlPAOpuSDf1QTpkjIs2KbWGHZaHWIViPLsgGTTCcqdlJ57W6YZX_ouE93YBiZtqrkJdSy8sO3-uvo-1TF0F5i36M0GmxssmJznAClrx3qmdVgRCZPDgFwwKsj6FxS5XRySxSGfoLWKH4dwKZEKFBr1x02irAKUsrvn__8fN9nnDY7Y016gnhB8ASY3Ru3dhYf_GROlG3BJ5rSWosa9WTeY1kuq9w1qYOhHy6g.jpg" alt="Создание любых картинок по вашему запросу" class="w-16 h-16 mx-auto mb-2 rounded-full">
+        <span class="text-xs">Создание любых картинок</span>
+      </a>
+      <a target="_blank" href="https://t.me/mystaro_bot" class="text-center">
+        <img src="https://cdn4.cdn-telegram.org/file/kqnd1d_RzkaFnquLiFtfqoZRokZop_G1Fv4zgcK062oDICv-O2AXgucB-ldEK4A_VfxVxpAQQDwi3PaUmL_-B5tMyiNISuJIPYOCL5VqoycGvPaDGemiu9lPC-whUVr2HQgPJ-Qx8UzJhTWKFwa1oi9ZA-GKU-aVErfldglW4YanBgXD2a9BbAgH4oE0jbl_7ULskafoCM_Nei_9drd28RtGq84RzenpJypQXZ4MzLJkDJgVLt-qupj1L8iLgCRDoWRpieBnneTP8FPjUgZCNML0_n8Sk4PGiL-2SGUtgxkqcHWe2H2_MOWN9jeVdVLj6DzQKqVSC56aJasdrpiPWQ.jpg" alt="Гадание на картах таро" class="w-16 h-16 mx-auto mb-2 rounded-full">
+        <span class="text-xs">Гадание на картах таро</span>
+      </a>
+      <a target="_blank" href="https://t.me/sistent_bot" class="text-center">
+        <img src="https://cdn4.cdn-telegram.org/file/eGLOdop0vb5r_gzW2Iac1JsueIz7xyCX0BgXjnX1CyX2mlSrvC09u7kP6hAD70Rk9dOoOVl_xVuq3p1ECHT1pIqce_wvOF7DbPPTdCmpmsY2wGl4-wtEN64zqw3ghHK764ylX9MD0gqZjSAI7gVgIDnXtxthXw5OLmIkzqeTPNyV5_nFNHPXXaFlPLsxTSYOPP0_ltZ44Lpk0NVngbxbXQj2IEJ8dNPNZ6e8oE5g1tQBG-Z8O1BqlaESH7FlTI3Qsn-0-iYoRVf3CbA0FPLoik6UZkj_ShBzGbbUJaWtKuUNZ3R_J1Xw9TUFXpRDXT6zp3sxxExAthF0rKNYboow8A.jpg" alt="Транскрипция звонков" class="w-16 h-16 mx-auto mb-2 rounded-full">
+        <span class="text-xs">Транскрипция звонков</span>
+      </a>
+    </div>
+  </footer>
 
-<script type="module" src="/main.js"></script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-    m[i].l=1*new Date();
-    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-  (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+  <script type="module" src="/main.js"></script>
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript" >
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-  ym(96413774, "init", {
-    clickmap:true,
-    trackLinks:true,
-    accurateTrackBounce:true,
-    webvisor:true
-  });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/96413774" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+    ym(96413774, "init", {
+      clickmap:true,
+      trackLinks:true,
+      accurateTrackBounce:true,
+      webvisor:true
+    });
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/96413774" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 </body>
-
-<footer class="fixed inset-x-0 bottom-0 bg-gray-800 text-white p-4">
-  <div class="max-w-screen-xl mx-auto flex justify-around items-center">
-    <a target="_blank" href="https://t.me/genera4_bot?start=bg" class="text-center">
-      <img src="https://cdn4.cdn-telegram.org/file/ZHLgmPtw52OR4hIDRVknlUXmR2G3qSnCuaTk7l_c20ZFA6qkuU05UnkfJ5P4OJAyZcvuYZzNM5NEwIXUyw7sZDzyzWbgoFMMawUWFiR9xKWW55giAxlPAOpuSDf1QTpkjIs2KbWGHZaHWIViPLsgGTTCcqdlJ57W6YZX_ouE93YBiZtqrkJdSy8sO3-uvo-1TF0F5i36M0GmxssmJznAClrx3qmdVgRCZPDgFwwKsj6FxS5XRySxSGfoLWKH4dwKZEKFBr1x02irAKUsrvn__8fN9nnDY7Y016gnhB8ASY3Ru3dhYf_GROlG3BJ5rSWosa9WTeY1kuq9w1qYOhHy6g.jpg" alt="Создание любых картинок по вашему запросу" class="w-16 h-16 mx-auto mb-2 rounded-full">
-      <span class="text-xs">Создание любых картинок</span>
-    </a>
-    <a target="_blank" href="https://t.me/mystaro_bot" class="text-center">
-      <img src="https://cdn4.cdn-telegram.org/file/kqnd1d_RzkaFnquLiFtfqoZRokZop_G1Fv4zgcK062oDICv-O2AXgucB-ldEK4A_VfxVxpAQQDwi3PaUmL_-B5tMyiNISuJIPYOCL5VqoycGvPaDGemiu9lPC-whUVr2HQgPJ-Qx8UzJhTWKFwa1oi9ZA-GKU-aVErfldglW4YanBgXD2a9BbAgH4oE0jbl_7ULskafoCM_Nei_9drd28RtGq84RzenpJypQXZ4MzLJkDJgVLt-qupj1L8iLgCRDoWRpieBnneTP8FPjUgZCNML0_n8Sk4PGiL-2SGUtgxkqcHWe2H2_MOWN9jeVdVLj6DzQKqVSC56aJasdrpiPWQ.jpg" alt="Гадание на картах таро" class="w-16 h-16 mx-auto mb-2 rounded-full">
-      <span class="text-xs">Гадание на картах таро</span>
-    </a>
-    <a target="_blank" href="https://t.me/sistent_bot" class="text-center">
-      <img src="https://cdn4.cdn-telegram.org/file/eGLOdop0vb5r_gzW2Iac1JsueIz7xyCX0BgXjnX1CyX2mlSrvC09u7kP6hAD70Rk9dOoOVl_xVuq3p1ECHT1pIqce_wvOF7DbPPTdCmpmsY2wGl4-wtEN64zqw3ghHK764ylX9MD0gqZjSAI7gVgIDnXtxthXw5OLmIkzqeTPNyV5_nFNHPXXaFlPLsxTSYOPP0_ltZ44Lpk0NVngbxbXQj2IEJ8dNPNZ6e8oE5g1tQBG-Z8O1BqlaESH7FlTI3Qsn-0-iYoRVf3CbA0FPLoik6UZkj_ShBzGbbUJaWtKuUNZ3R_J1Xw9TUFXpRDXT6zp3sxxExAthF0rKNYboow8A.jpg" alt="Транскрипция звонков" class="w-16 h-16 mx-auto mb-2 rounded-full">
-      <span class="text-xs">Транскрипция звонков</span>
-    </a>
-  </div>
-</footer>
 </html>
