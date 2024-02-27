@@ -9,6 +9,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
